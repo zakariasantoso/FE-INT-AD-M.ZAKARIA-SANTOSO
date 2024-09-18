@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LoginComponent from './components/LoginComponent';
+import CategoryComponent from './components/CategoryComponent';
+import Navigation from './components/Navigation';
+import PrivateRoute from './components/PrivateRoute'; // Import PrivateRoute
 
-function App() {
+const queryClient = new QueryClient();
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <div className="container mx-auto p-4">
+          <h1 className="text-3xl font-bold text-center mb-8">My Blog</h1>
+          <Navigation />
+          <Routes>
+            <Route path="/" element={<LoginComponent />} />
+            {/* Gunakan PrivateRoute untuk melindungi rute kategori */}
+            <Route element={<PrivateRoute />}>
+              <Route path="/categories" element={<CategoryComponent />} />
+            </Route>
+          </Routes>
+        </div>
+      </Router>
+    </QueryClientProvider>
   );
-}
+};
 
 export default App;
